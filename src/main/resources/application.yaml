@@ -1,3 +1,6 @@
 spring:
   application:
-    name: service
+    name: books-service
+
+server:
+  port: 8080

@@ -1,10 +1,10 @@
-package com.cicd.service;
+package com.books;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ServiceApplicationTests {
+class ApplicationTests {
 
 	@Test
 	void contextLoads() {
