@@ -18,18 +18,18 @@ public class BookService {
     }
 
     public List<BookDTO> getAllBooks() {
-        return null;
+        return repository.getAllBooks();
     }
 
     public BookDTO createBook(BookCreationRequest request) {
-        return null;
+        return repository.createBook(request);
     }
 
     public BookDTO updateBook(BookUpdateRequest request) {
-        return null;
+        return repository.updateBook(request);
     }
 
     public boolean deleteBook(Long id) {
-        return false;
+        return repository.deleteBook(id);
     }
 }

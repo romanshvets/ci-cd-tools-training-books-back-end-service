@@ -22,17 +22,14 @@ public class BookRepository {
         var maxId = BOOKS.keySet().stream().mapToLong(i -> i).max().orElse(0);
         var newId = maxId + 1;
 
-        BOOKS.computeIfAbsent(newId, (id) -> new BookDTO(id, request.name, request.author, request.publishDate));
-
-        return BOOKS.get(newId);
+        return BOOKS.computeIfAbsent(newId, (id) -> new BookDTO(id, request.name, request.author, request.publishDate));
     }
 
     public BookDTO updateBook(BookUpdateRequest request) {
-        return null;
+        return BOOKS.computeIfPresent(request.id, (id, book) -> new BookDTO(id, request.name, request.author, request.publishDate));
     }
 
     public boolean deleteBook(Long id) {
-        return false;
+        return BOOKS.remove(id) != null;
     }
-
 }

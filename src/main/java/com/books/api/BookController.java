@@ -17,6 +17,33 @@ public class BookController {
 
     private final BookService bookService;
 
+    /*public BookService(BookRepository repository) {
+        this.repository = repository;
+    }
+
+    public List<BookDTO> getAllBooks() {
+        return repository.getAllBooks();
+    }
+
+    public BookDTO createBook(BookCreationRequest request) {
+        return repository.createBook(request);
+    }
+
+    public BookDTO updateBook(BookUpdateRequest request) {
+        return repository.updateBook(request);
+    }
+
+    public boolean deleteBook(Long id) {
+        return repository.deleteBook(id);
+    }*/
+
+    @GetMapping(value = "/{id}", produces = "audio/mpeg")
+    public ResponseEntity<byte[]> getResource(@PathVariable("id") String id) {
+        var resourceContent = this.bookService.getResource(id);
+
+        return ResponseEntity.ok(resourceContent);
+    }
+
     @PostMapping(produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Long>> createResource(HttpServletRequest request) {
         var resourceId = this.bookService.createResource(request);
