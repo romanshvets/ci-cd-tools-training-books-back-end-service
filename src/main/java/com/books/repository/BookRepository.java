@@ -8,21 +8,28 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class BookRepository {
 
-    private static final Map<Long, BookDTO> BOOKS = BookUtils.generateRandomBooks(10);
+    private final Map<Long, BookDTO> BOOKS;
+    private final AtomicLong BOOK_ID_GENERATOR;
+
+    public BookRepository() {
+        BOOKS = BookUtils.generateRandomBooks(10);
+
+        BOOK_ID_GENERATOR = new AtomicLong(BOOKS.keySet().stream().mapToLong(i -> i).max().orElse(0L));
+    }
 
     public List<BookDTO> getAllBooks() {
         return BOOKS.values().stream().toList();
     }
 
     public BookDTO createBook(BookCreationRequest request) {
-        var maxId = BOOKS.keySet().stream().mapToLong(i -> i).max().orElse(0);
-        var newId = maxId + 1;
-
-        return BOOKS.computeIfAbsent(newId, (id) -> new BookDTO(id, request.name, request.author, request.publishDate));
+        return BOOKS.computeIfAbsent(BOOK_ID_GENERATOR.incrementAndGet(),
+                (id) -> new BookDTO(id, request.name, request.author, request.publishDate)
+        );
     }
 
     public BookDTO updateBook(BookUpdateRequest request) {
