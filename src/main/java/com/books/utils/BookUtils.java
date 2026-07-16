@@ -4,12 +4,9 @@ import com.books.model.BookDTO;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class BookUtils {
 
@@ -52,10 +49,10 @@ public class BookUtils {
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public static ConcurrentHashMap<Long, BookDTO> generateRandomBooks(int count) {
+    public static Map<Long, BookDTO> generateRandomBooks(int count) {
         var random = new Random();
 
-        var books = new ConcurrentHashMap<Long, BookDTO>();
+        var result = new ConcurrentHashMap<Long, BookDTO>();
 
         for (var i = 0; i < count; i++) {
             var id = (long) (i + 1);
@@ -63,10 +60,10 @@ public class BookUtils {
             var author = AUTHORS[random.nextInt(AUTHORS.length)];
             var publishDate = randomDate(random).format(DATE_FORMAT);
 
-            books.add(new BookDTO(id, name, author, publishDate));
+            result.put(id, new BookDTO(id, name, author, publishDate));
         }
 
-        return new CopyOnWriteArrayList<>(books);
+        return result;
     }
 
     private static LocalDate randomDate(Random random) {

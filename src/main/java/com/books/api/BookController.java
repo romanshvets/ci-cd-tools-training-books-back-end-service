@@ -1,15 +1,16 @@
 package com.books.api;
 
+import com.books.model.BookDTO;
 import com.books.service.BookService;
-import jakarta.servlet.http.HttpServletRequest;
+import com.books.service.model.BookCreationRequest;
+import com.books.service.model.BookUpdateRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/books")
@@ -17,51 +18,27 @@ public class BookController {
 
     private final BookService bookService;
 
-    /*public BookService(BookRepository repository) {
-        this.repository = repository;
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
     }
 
-    public List<BookDTO> getAllBooks() {
-        return repository.getAllBooks();
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<BookDTO>> getAllBooks() {
+        return ok(bookService.getAllBooks());
     }
 
-    public BookDTO createBook(BookCreationRequest request) {
-        return repository.createBook(request);
+    @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<BookDTO> createBook(@RequestBody BookCreationRequest request) {
+        return ok(bookService.createBook(request));
     }
 
-    public BookDTO updateBook(BookUpdateRequest request) {
-        return repository.updateBook(request);
+    @PutMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<BookDTO> updateBook(@RequestBody BookUpdateRequest request) {
+        return ok(bookService.updateBook(request));
     }
 
-    public boolean deleteBook(Long id) {
-        return repository.deleteBook(id);
-    }*/
-
-    @GetMapping(value = "/{id}", produces = "audio/mpeg")
-    public ResponseEntity<byte[]> getResource(@PathVariable("id") String id) {
-        var resourceContent = this.bookService.getResource(id);
-
-        return ResponseEntity.ok(resourceContent);
-    }
-
-    @PostMapping(produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Long>> createResource(HttpServletRequest request) {
-        var resourceId = this.bookService.createResource(request);
-
-        return ResponseEntity.ok(Collections.singletonMap("id", resourceId));
-    }
-
-    @GetMapping(value = "/{id}", produces = "audio/mpeg")
-    public ResponseEntity<byte[]> getResource(@PathVariable("id") String id) {
-        var resourceContent = this.bookService.getResource(id);
-
-        return ResponseEntity.ok(resourceContent);
-    }
-
-    @DeleteMapping(produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Set<Long>>> deleteSongs(@RequestParam("id") String ids) {
-        var deletedResourceIds = this.bookService.deleteResources(ids);
-
-        return ResponseEntity.ok(Collections.singletonMap("ids", deletedResourceIds));
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Boolean> deleteBook(@PathVariable Long id) {
+        return ok(bookService.deleteBook(id));
     }
 }
