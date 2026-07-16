@@ -7,12 +7,12 @@ import com.books.utils.BookUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 
 @Repository
 public class BookRepository {
 
-    private static final ConcurrentHashMap<Long, BookDTO> BOOKS = BookUtils.generateRandomBooks(25);
+    private static final Map<Long, BookDTO> BOOKS = BookUtils.generateRandomBooks(25);
 
     public List<BookDTO> getAllBooks() {
         return BOOKS.values().stream().toList();
