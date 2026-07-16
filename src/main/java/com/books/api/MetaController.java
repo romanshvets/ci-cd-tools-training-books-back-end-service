@@ -21,7 +21,7 @@ public class MetaController {
     }
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<MetaDTO> getAllBooks() {
+    public ResponseEntity<MetaDTO> getMeta() {
         return ok(metaService.getMeta());
     }
 }
