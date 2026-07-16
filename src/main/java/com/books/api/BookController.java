@@ -22,7 +22,7 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @GetMapping(produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<BookDTO>> getAllBooks() {
         return ok(bookService.getAllBooks());
     }
@@ -38,7 +38,7 @@ public class BookController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Boolean> deleteBook(@PathVariable Long id) {
+    public ResponseEntity<Boolean> deleteBook(@PathVariable("id") Long id) {
         return ok(bookService.deleteBook(id));
     }
 }
