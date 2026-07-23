@@ -7,7 +7,7 @@ import com.books.service.model.BookUpdateRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
@@ -23,17 +23,17 @@ public class BookController {
     }
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<BookDTO>> getAllBooks() {
+    public ResponseEntity<Set<BookDTO>> getAllBooks() {
         return ok(bookService.getAllBooks());
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<BookDTO> createBook(@RequestBody BookCreationRequest request) {
+    public ResponseEntity<Boolean> createBook(@RequestBody BookCreationRequest request) {
         return ok(bookService.createBook(request));
     }
 
     @PutMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<BookDTO> updateBook(@RequestBody BookUpdateRequest request) {
+    public ResponseEntity<Boolean> updateBook(@RequestBody BookUpdateRequest request) {
         return ok(bookService.updateBook(request));
     }
 

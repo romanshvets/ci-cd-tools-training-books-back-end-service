@@ -1,12 +1,13 @@
 package com.books.utils;
 
 import com.books.model.BookDTO;
+import com.books.service.model.BookCreationRequest;
+import com.books.service.model.BookUpdateRequest;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class BookUtils {
 
@@ -47,23 +48,63 @@ public class BookUtils {
             "Owen Fitzgerald", "Leila Farah", "Bruno Costa", "Sabina Kaur"
     };
 
-    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public static Map<Long, BookDTO> generateRandomBooks(int count) {
+    public static Set<BookDTO> generateRandomBooks(int count) {
         var random = new Random();
 
-        var result = new ConcurrentHashMap<Long, BookDTO>();
+        var result = new ConcurrentSkipListSet<>(Comparator.comparing(BookDTO::getId));
 
         for (var i = 0; i < count; i++) {
             var id = (long) (i + 1);
             var name = TITLES[random.nextInt(TITLES.length)];
             var author = AUTHORS[random.nextInt(AUTHORS.length)];
-            var publishDate = randomDate(random).format(DATE_FORMAT);
+            var publishDate = randomDate(random).format(DATE_FORMATTER);
 
-            result.put(id, new BookDTO(id, name, author, publishDate));
+            result.add(new BookDTO(id, name, author, publishDate));
         }
 
         return result;
+    }
+
+    public static Optional<Set<String>> validateBookCreation(BookCreationRequest request) {
+        var errors = new HashSet<String>();
+
+        if (request.name == null || request.name.isBlank()) {
+            errors.add("name");
+        }
+
+        if (request.author == null || request.author.isBlank()) {
+            errors.add("author");
+        }
+
+        if (request.publishDate == null || request.publishDate.isBlank()) {
+            errors.add("publishDate");
+        }
+
+        return errors.isEmpty() ? Optional.empty() : Optional.of(errors);
+    }
+
+    public static Optional<Set<String>> validateBookUpdate(BookUpdateRequest request) {
+        var errors = new HashSet<String>();
+
+        if (request.id == null || request.id <= 0L) {
+            errors.add("id");
+        }
+
+        if (request.name == null || request.name.isBlank()) {
+            errors.add("name");
+        }
+
+        if (request.author == null || request.author.isBlank()) {
+            errors.add("author");
+        }
+
+        if (request.publishDate == null || request.publishDate.isBlank()) {
+            errors.add("publishDate");
+        }
+
+        return errors.isEmpty() ? Optional.empty() : Optional.of(errors);
     }
 
     private static LocalDate randomDate(Random random) {

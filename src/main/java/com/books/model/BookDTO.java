@@ -3,9 +3,9 @@ package com.books.model;
 public class BookDTO {
 
     private final Long id;
-    private final String name;
-    private final String author;
-    private final String publishDate;
+    private String name;
+    private String author;
+    private String publishDate;
 
     public BookDTO(Long id, String name, String author, String publishDate) {
         this.id = id;
@@ -22,11 +22,23 @@ public class BookDTO {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getAuthor() {
         return author;
     }
 
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
     public String getPublishDate() {
         return publishDate;
+    }
+
+    public void setPublishDate(String publishDate) {
+        this.publishDate = publishDate;
     }
 }

@@ -6,37 +6,60 @@ import com.books.service.model.BookUpdateRequest;
 import com.books.utils.BookUtils;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class BookRepository {
 
-    private final Map<Long, BookDTO> BOOKS;
+    private final Set<BookDTO> BOOKS;
     private final AtomicLong BOOK_ID_GENERATOR;
 
     public BookRepository() {
         BOOKS = BookUtils.generateRandomBooks(10);
 
-        BOOK_ID_GENERATOR = new AtomicLong(BOOKS.keySet().stream().mapToLong(i -> i).max().orElse(0L));
+        BOOK_ID_GENERATOR = new AtomicLong(BOOKS.stream().mapToLong(BookDTO::getId).max().orElse(0L));
     }
 
-    public List<BookDTO> getAllBooks() {
-        return BOOKS.values().stream().toList();
+    public Set<BookDTO> getAllBooks() {
+        return BOOKS;
     }
 
-    public BookDTO createBook(BookCreationRequest request) {
-        return BOOKS.computeIfAbsent(BOOK_ID_GENERATOR.incrementAndGet(),
-                (id) -> new BookDTO(id, request.name, request.author, request.publishDate)
-        );
+    public Optional<BookDTO> getBookById(Long id) {
+        return BOOKS.stream().filter(b -> Objects.equals(id, b.getId())).findFirst();
     }
 
-    public BookDTO updateBook(BookUpdateRequest request) {
-        return BOOKS.computeIfPresent(request.id, (id, book) -> new BookDTO(id, request.name, request.author, request.publishDate));
+    public boolean createBook(BookCreationRequest request) {
+        return BOOKS.add(new BookDTO(BOOK_ID_GENERATOR.incrementAndGet(), request.name, request.author, request.publishDate));
+    }
+
+    public boolean updateBook(BookUpdateRequest request) {
+        var book = BOOKS.stream()
+                .filter(b -> Objects.equals(request.id, b.getId()))
+                .findFirst().orElse(null);
+
+        if (book == null) {
+            return false;
+        }
+
+        book.setAuthor(request.author);
+        book.setName(request.name);
+        book.setPublishDate(request.publishDate);
+
+        return true;
     }
 
     public boolean deleteBook(Long id) {
-        return BOOKS.remove(id) != null;
+        var book = BOOKS.stream()
+                .filter(b -> Objects.equals(id, b.getId()))
+                .findFirst().orElse(null);
+
+        if (book == null) {
+            return false;
+        }
+
+        return BOOKS.remove(book);
     }
 }
