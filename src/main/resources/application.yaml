@@ -3,6 +3,6 @@ spring:
     name: books-service
 
 server:
-  port: 8080
+  port: ${BOOKS_BACK_SERVICE_PORT:8080}
   servlet:
     context-path: /api
