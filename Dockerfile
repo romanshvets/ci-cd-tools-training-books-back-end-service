@@ -1,5 +1,5 @@
 # USE THE FOLLOWING COMMAND TO CHANGE THE DEFAULT SERVER PORT (WHICH IS 8080):
-# docker run -e BOOKS_BACK_SERVER_PORT=9097 -p 8080:9097 %image name%
+# docker run -e BOOKS_BACK_SERVER_PORT=9090 -p 8080:9090 books-back-service
 
 # BUILD STAGE
 FROM gradle:jdk17-alpine AS books-service-build
