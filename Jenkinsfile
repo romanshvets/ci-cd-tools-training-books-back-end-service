@@ -16,6 +16,9 @@ pipeline {
 
 				script {
 					sh "docker build -t books-back-service:${env.BUILD_ID} ."
+
+					sh "docker tag books-back-service:${env.BUILD_ID} rshvets89/books-back-service:${env.BUILD_ID}"
+					sh "docker tag books-back-service:${env.BUILD_ID} rshvets89/books-back-service:latest"
 				}
 
 				echo 'Built !'
@@ -26,11 +29,8 @@ pipeline {
 			steps {
 				echo 'Deploying ...'
 
-				script {
-					sh "docker tag books-back-service:${env.BUILD_ID} rshvets89/books-back-service:${env.BUILD_ID}"
+				docker.withRegistry('https://docker.io', 'dockerhub-credentials') {
 					sh "docker push rshvets89/books-back-service:${env.BUILD_ID}"
-
-					sh "docker tag books-back-service:${env.BUILD_ID} rshvets89/books-back-service:latest"
 					sh "docker push rshvets89/books-back-service:latest"
 				}
 
