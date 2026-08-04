@@ -13,7 +13,7 @@ pipeline {
 		stage('Build') {
 			steps {
 				script {
-					sh "docker build -t books-back-service:${env.BUILD_ID}"
+					sh "docker build -t books-back-service:${env.BUILD_ID} ."
 				}
 			}
 		}
