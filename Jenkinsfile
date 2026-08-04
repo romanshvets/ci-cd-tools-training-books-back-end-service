@@ -6,7 +6,7 @@ pipeline {
 			steps {
 				echo 'Checking out ...'
 				checkout scm
-				echo 'Checked out
+				echo 'Checked out !'
 			}
 		}
 
