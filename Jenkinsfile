@@ -13,11 +13,7 @@ pipeline {
 		stage('Build') {
 			steps {
 				script {
-					// Looks for a file named 'Dockerfile' in the root workspace folder
-					def appImage = docker.build("books-back-service:${env.BUILD_ID}")
-
-					// Optional: Push to a registry if needed later
-					// appImage.push()
+					sh "docker build -t books-back-service:${env.BUILD_ID}"
 				}
 			}
 		}
