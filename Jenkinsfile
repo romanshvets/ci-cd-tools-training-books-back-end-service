@@ -22,6 +22,20 @@ pipeline {
 			}
 		}
 
+		stage('Deploy') {
+			echo 'Deploying ...'
+
+			script {
+				sh "docker tag books-back-service:${env.BUILD_ID} rshvets89/books-back-service:${env.BUILD_ID}"
+				sh "docker push rshvets89/books-back-service:${env.BUILD_ID}"
+
+				sh "docker tag books-back-service:${env.BUILD_ID} rshvets89/books-back-service:latest"
+				sh "docker push rshvets89/books-back-service:latest"
+			}
+
+			echo 'Deployed !'
+		}
+
 		//stage('Build') {
 		//	steps {
 		//		echo 'Building ...'
