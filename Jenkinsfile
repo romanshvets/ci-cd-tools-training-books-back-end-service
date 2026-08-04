@@ -1,14 +1,21 @@
 pipeline {
-  agent { dockerfile true }
-  stages {
-    stage('Test') {
-      steps {
-        sh '''
-          node --version
-          git --version
-          curl --version
-        '''
-      }
-    }
-  }
+	agent any
+
+	stages {
+		stage('Build') {
+			steps {
+				echo 'Building ...'
+			}
+		}
+		stage('Test') {
+			steps {
+				echo 'Testing ...'
+			}
+		}
+		stage('Deploy') {
+			steps {
+				echo 'Deploying ...'
+			}
+		}
+	}
 }
