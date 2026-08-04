@@ -12,9 +12,13 @@ pipeline {
 
 		stage('Build') {
 			steps {
+				echo 'Building ...'
+
 				script {
 					sh "docker build -t books-back-service:${env.BUILD_ID} ."
 				}
+
+				echo 'Built !'
 			}
 		}
 
