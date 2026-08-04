@@ -29,9 +29,11 @@ pipeline {
 			steps {
 				echo 'Deploying ...'
 
-				docker.withRegistry('https://docker.io', 'dockerhub-credentials') {
-					sh "docker push rshvets89/books-back-service:${env.BUILD_ID}"
-					sh "docker push rshvets89/books-back-service:latest"
+				script {
+					docker.withRegistry('https://docker.io', 'dockerhub-credentials') {
+						sh "docker push rshvets89/books-back-service:${env.BUILD_ID}"
+						sh "docker push rshvets89/books-back-service:latest"
+					}
 				}
 
 				echo 'Deployed !'
