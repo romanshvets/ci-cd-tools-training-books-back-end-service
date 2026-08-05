@@ -1,5 +1,7 @@
 pipeline {
-	agent build-agent
+	agent {
+		label 'build-agent'
+	}
 
 	environment {
 		DOCKER_HUB_USER = 'rshvets89'
