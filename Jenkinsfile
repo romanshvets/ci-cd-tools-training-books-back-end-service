@@ -49,20 +49,33 @@ pipeline {
 		//	}
 		//}
 		//
-		//stage('Deploy') {
-		//	steps {
-		//		echo 'Deploying ...'
-		//
-		//		script {
-		//			docker.withRegistry('https://docker.io', 'dockerhub-credentials') {
-		//				sh "docker push rshvets89/books-back-service:${env.BUILD_ID}"
-		//				sh "docker push rshvets89/books-back-service:latest"
-		//			}
-		//		}
-		//
-		//		echo 'Deployed !'
-		//	}
-		//}
+		stage('Deploy') {
+			steps {
+				echo 'Deploying ...'
+
+				withCredentials([
+					usernamePassword(
+						credentialsId: 'docker-hub-credentials',
+						usernameVariable: 'DOCKER_USER',
+						passwordVariable: 'DOCKER_PASS'
+					)]) {
+
+					script {
+						sh "echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin"
+
+						sh "docker push ${DOCKER_HUB_USER}/${IMAGE_NAME}:${IMAGE_TAG}"
+						sh "docker push ${DOCKER_HUB_USER}/${IMAGE_NAME}:latest"
+
+						//docker.withRegistry('https://docker.io', 'dockerhub-credentials') {
+						//	sh "docker push rshvets89/books-back-service:${env.BUILD_ID}"
+						//	sh "docker push rshvets89/books-back-service:latest"
+						//}
+					}
+				}
+
+				echo 'Deployed !'
+			}
+		}
 	}
 
 	post {
