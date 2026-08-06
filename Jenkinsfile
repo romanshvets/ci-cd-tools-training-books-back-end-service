@@ -1,6 +1,6 @@
 pipeline {
 	agent {
-		label 'deploy-agent'
+		label 'build-agent'
 	}
 
 	environment {
