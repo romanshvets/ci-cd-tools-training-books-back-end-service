@@ -18,7 +18,7 @@ public class BookRepository {
     private final AtomicLong BOOK_ID_GENERATOR;
 
     public BookRepository() {
-        BOOKS = BookUtils.generateRandomBooks(10);
+        BOOKS = BookUtils.generateRandomBooks(15);
 
         BOOK_ID_GENERATOR = new AtomicLong(BOOKS.stream().mapToLong(BookDTO::getId).max().orElse(0L));
     }
