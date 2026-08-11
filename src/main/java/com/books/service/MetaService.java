@@ -23,13 +23,17 @@ public class MetaService {
         var meta = getMetaFromFile();
 
         var version = meta.get(KEY_VERSION);
-        var buildDate = meta.get(KEY_VERSION);
+        var buildDate = meta.get(KEY_BUILD_DATE);
 
-        if ("%VERSION_PLACEHOLDER%".equalsIgnoreCase("version")) {
-
+        if ("%VERSION_PLACEHOLDER%".equalsIgnoreCase(version)) {
+            version = "0";
         }
 
-        return new MetaDTO(meta.get(KEY_VERSION), meta.get(KEY_BUILD_DATE));
+        if ("%BUILD_DATE_PLACEHOLDER%".equalsIgnoreCase(buildDate)) {
+            buildDate = "0";
+        }
+
+        return new MetaDTO(version, buildDate);
     }
 
     private Map<String, String> getMetaFromFile() {

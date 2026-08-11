@@ -8,8 +8,6 @@ FROM gradle:jdk17-alpine AS books-service-build
 ARG BUILD_VERSION=0
 ARG BUILD_DATE=0
 
-#RUN sed -i "s/%SERVER_PORT%/${BOOKS_FRONT_SERVER_PORT:-85}/g" /etc/nginx/conf.d/default.conf
-
 WORKDIR /app
 
 COPY gradlew build.gradle ./
@@ -20,10 +18,12 @@ RUN chmod +x gradlew
 RUN ["./gradlew", "dependencies", "--no-daemon"]
 
 COPY src ./src
+RUN sed -i "s/%VERSION_PLACEHOLDER%/${BUILD_VERSION}/g" /app/src/main/resources/meta.properties
+RUN sed -i "s/%BUILD_DATE_PLACEHOLDER%/${BUILD_DATE}/g" /app/src/main/resources/meta.properties
 RUN ["./gradlew", "build", "--no-daemon"]
 
 # RUNTIME STAGE
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:17-jre-alpine AS runtime
 
 ENV BOOKS_BACK_SERVER_PORT=${BOOKS_BACK_SERVER_PORT:-8080}
 
