@@ -3,7 +3,7 @@ pipeline {
 		label 'build-agent'
 	}
 
-	environment {
+    environment {
 		DOCKER_HUB_USER = 'rshvets89'
 		IMAGE_NAME      = 'books-back-service'
 		IMAGE_TAG       = "${env.BUILD_NUMBER}"
@@ -59,7 +59,7 @@ pipeline {
 
 	post {
 		always {
-			sh "docker logout"
+			sh 'docker logout'
 		}
 	}
 }

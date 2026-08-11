@@ -4,6 +4,12 @@
 # BUILD STAGE
 FROM gradle:jdk17-alpine AS books-service-build
 
+# 1. Define ARG in Dockerfile
+ARG BUILD_VERSION=0
+ARG BUILD_DATE=0
+
+#RUN sed -i "s/%SERVER_PORT%/${BOOKS_FRONT_SERVER_PORT:-85}/g" /etc/nginx/conf.d/default.conf
+
 WORKDIR /app
 
 COPY gradlew build.gradle ./
