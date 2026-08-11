@@ -28,6 +28,25 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+tasks.register('unit-tests', Test) {
+    classpath = sourceSets.test.runtimeClasspath
+    testClassesDirs = sourceSets.test.output.classesDirs
+
+    useJUnitPlatform()
+
+    filter {
+        includeTestsMatching "*UnitTest"
+    }
+}
+
+//tasks.register('integration-tests', Test) {
+//    useJUnitPlatform()
+//
+//    filter {
+//        includeTestsMatching "*UnitTest"
+//    }
+//}
+
 tasks.named('test') {
     useJUnitPlatform()
 }

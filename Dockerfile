@@ -2,7 +2,7 @@
 # docker run -e BOOKS_BACK_SERVER_PORT=9090 -p 8080:9090 books-back-service
 
 # BUILD STAGE
-FROM gradle:jdk17-alpine AS books-service-build
+FROM gradle:jdk17-alpine AS build
 
 ARG BUILD_VERSION=0
 ARG BUILD_DATE=0
@@ -19,7 +19,16 @@ RUN ["./gradlew", "dependencies", "--no-daemon"]
 COPY src ./src
 RUN sed -i "s/%VERSION_PLACEHOLDER%/${BUILD_VERSION}/g" /app/src/main/resources/meta.properties
 RUN sed -i "s/%BUILD_DATE_PLACEHOLDER%/${BUILD_DATE}/g" /app/src/main/resources/meta.properties
-RUN ["./gradlew", "build", "--no-daemon"]
+RUN ["./gradlew", "build", "-x", "test", "--no-daemon"]
+
+# UNIT TESTS
+FROM build AS unit-tests
+
+# docker build --target unit-tests -t books-back-end-unit-tests:1 .
+# docker run --name books-back-end-unit-tests-1 books-back-end-unit-tests:1
+# docker cp books-back-end-unit-tests-1:/app/build/reports/tests ./host-results/
+
+CMD ["./gradlew", "unit-test", "--no-daemon"]
 
 # RUNTIME STAGE
 FROM eclipse-temurin:17-jre-alpine AS runtime
@@ -28,7 +37,7 @@ ENV BOOKS_BACK_SERVER_PORT=${BOOKS_BACK_SERVER_PORT:-8080}
 
 WORKDIR /app
 
-COPY --from=books-service-build --exclude=*-plain.jar /app/build/libs/*.jar ./app.jar
+COPY --from=build --exclude=*-plain.jar /app/build/libs/*.jar ./app.jar
 
 EXPOSE ${BOOKS_BACK_SERVER_PORT}
 
