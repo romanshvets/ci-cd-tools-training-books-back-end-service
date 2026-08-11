@@ -4,7 +4,6 @@
 # BUILD STAGE
 FROM gradle:jdk17-alpine AS books-service-build
 
-# 1. Define ARG in Dockerfile
 ARG BUILD_VERSION=0
 ARG BUILD_DATE=0
 
