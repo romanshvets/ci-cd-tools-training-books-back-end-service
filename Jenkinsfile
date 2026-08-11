@@ -8,7 +8,7 @@ pipeline {
 		IMAGE_NAME      = 'books-back-service'
 		IMAGE_TAG       = "${env.BUILD_NUMBER}"
 		BUILD_VERSION   = "${env.BUILD_NUMBER}"
-		BUILD_DATE      = "${new Date().format('yyyy-MM-dd')}"
+		BUILD_DATE      = "${new Date().format('yyyy-MM-dd HH:mm:ss')}"
 	}
 
 	stages {
