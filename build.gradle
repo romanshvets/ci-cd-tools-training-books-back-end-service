@@ -42,6 +42,7 @@ spotbugs {
 
 sonar {
     properties {
+        property "sonar.token", "secret-token"
         property "sonar.projectKey", "books-back-service"
         property "sonar.projectName", "books-back-service"
         property "sonar.host.url", "http://82.144.223.31:9000/"
