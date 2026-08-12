@@ -45,6 +45,7 @@ pipeline {
                         script {
                             sh "docker build -t books-back-end-unit-tests:${IMAGE_TAG} --target unit-tests ."
                             sh "docker run --name books-back-end-unit-tests-${IMAGE_TAG} books-back-end-unit-tests:${IMAGE_TAG}"
+                            sh "docker cp books-back-end-unit-tests-${IMAGE_TAG}:/app/build/reports/tests ./${TEST_RESULTS_DIR}/"
 
 // docker build --target unit-tests -t books-back-end-unit-tests:1 .
 // docker run --name books-back-end-unit-tests-1 books-back-end-unit-tests:1

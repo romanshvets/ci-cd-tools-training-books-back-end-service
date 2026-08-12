@@ -4,9 +4,6 @@
 # BUILD STAGE
 FROM gradle:jdk17-alpine AS build
 
-ARG BUILD_VERSION=0
-ARG BUILD_DATE=0
-
 WORKDIR /app
 
 COPY gradlew build.gradle ./
@@ -17,6 +14,10 @@ RUN chmod +x gradlew
 RUN ["./gradlew", "dependencies", "--no-daemon"]
 
 COPY src ./src
+
+ARG BUILD_VERSION=0
+ARG BUILD_DATE=0
+
 RUN sed -i "s/%VERSION_PLACEHOLDER%/${BUILD_VERSION}/g" ./src/main/resources/meta.properties
 RUN sed -i "s/%BUILD_DATE_PLACEHOLDER%/${BUILD_DATE}/g" ./src/main/resources/meta.properties
 RUN ["./gradlew", "build", "-x", "test", "--no-daemon"]
