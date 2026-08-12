@@ -35,6 +35,45 @@ pipeline {
 			}
 		}
 
+		stage('Test') {
+		    parallel {
+                stage('Unit Tests') {
+                    steps {
+                        echo 'Running Unit Tests ...'
+
+                        script {
+                            sh "docker build -t books-back-end-unit-tests:${IMAGE_TAG} --target unit-tests ."
+
+// docker build --target unit-tests -t books-back-end-unit-tests:1 .
+// docker run --name books-back-end-unit-tests-1 books-back-end-unit-tests:1
+// docker cp books-back-end-unit-tests-1:/app/build/reports/tests ./host-results/
+
+                        }
+
+                        echo 'Unit tests complete ...'
+                    }
+
+//                    post {
+//                        always {
+//                        }
+//                    }
+                }
+//                stage('Test On Linux') {
+//                    agent {
+//                        label "linux"
+//                    }
+//                    steps {
+//                        sh "run-tests.sh"
+//                    }
+//                    post {
+//                        always {
+//                            junit "**/TEST-*.xml"
+//                        }
+//                    }
+//                }
+            }
+		}
+
 		stage('Deploy') {
 			steps {
 				echo 'Deploying ...'
