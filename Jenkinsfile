@@ -29,6 +29,18 @@ pipeline {
 			}
 		}
 
+		stage('Base Build') {
+            steps {
+                echo 'Building ...'
+
+                script {
+                    sh "docker build -t ${IMAGE_NAME}-BASE:${IMAGE_TAG} --target base ."
+                }
+
+                echo 'Built'
+            }
+        }
+
 		stage('Test') {
 		    parallel {
                 stage('Unit Tests') {
@@ -102,15 +114,15 @@ pipeline {
             }
 		}
 
-		stage('Build') {
+		stage('Assemble') {
             steps {
-                echo 'Building ...'
+                echo 'Assembling ...'
 
                 script {
                     sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} --target runtime --build-arg BUILD_VERSION=${BUILD_VERSION} --build-arg BUILD_DATE=\"${BUILD_DATE}\" ."
                 }
 
-                echo 'Built'
+                echo 'Assembled'
             }
         }
 
@@ -147,6 +159,8 @@ pipeline {
         }
 
 		always {
+            sh "docker rmi -f ${IMAGE_NAME}-BASE:${IMAGE_TAG}"
+
 			sh 'docker logout'
 
 			archiveArtifacts artifacts: "${TEST_RESULTS_DIR}/**.zip", allowEmptyArchive: true

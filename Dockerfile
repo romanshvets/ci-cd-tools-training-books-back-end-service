@@ -15,6 +15,8 @@ RUN ["./gradlew", "dependencies", "--no-daemon"]
 
 COPY src ./src
 
+RUN ["./gradlew", "compileJava", "processResources", "compileTestJava", "processTestResources", "--no-daemon"]
+
 # UNIT TESTS
 FROM base AS unit-tests
 
