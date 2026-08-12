@@ -29,7 +29,7 @@ pipeline {
 			}
 		}
 
-		stage('Base Build') {
+		stage('Build') {
             steps {
                 echo 'Building ...'
 
@@ -156,11 +156,14 @@ pipeline {
 	post {
         success {
             cleanWs()
+
+            sh "docker rmi -f ${IMAGE_NAME}-base:${IMAGE_TAG}"
+            sh "docker rmi -f ${IMAGE_NAME}:${IMAGE_TAG}"
+            sh "docker rmi -f ${DOCKER_HUB_USER}/${IMAGE_NAME}:${IMAGE_TAG}"
+            sh "docker rmi -f ${DOCKER_HUB_USER}/${IMAGE_NAME}:latest"
         }
 
 		always {
-            sh "docker rmi -f ${IMAGE_NAME}-base:${IMAGE_TAG}"
-
 			sh 'docker logout'
 
 			archiveArtifacts artifacts: "${TEST_RESULTS_DIR}/**.zip", allowEmptyArchive: true
