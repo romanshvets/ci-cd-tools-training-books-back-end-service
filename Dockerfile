@@ -18,17 +18,17 @@ COPY src ./src
 # UNIT TESTS
 FROM base AS unit-tests
 
-CMD ["./gradlew", "clean", "unit-test", "--no-daemon"]
+RUN ["./gradlew", "unit-test", "--no-daemon"]
 
 # PMD TESTS
 FROM base AS pmd-tests
 
-CMD ["./gradlew", "pmdMain", "--no-daemon"]
+RUN ["./gradlew", "pmdMain", "--no-daemon"]
 
 # SPOTBUGS TESTS
 FROM base AS spotbugs-tests
 
-CMD ["./gradlew", "spotbugsMain", "--no-daemon"]
+RUN ["./gradlew", "spotbugsMain", "--no-daemon"]
 
 # BUILD STAGE
 FROM base AS build

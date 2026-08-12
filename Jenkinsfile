@@ -37,7 +37,7 @@ pipeline {
 
                         script {
                             sh "docker build -t books-back-end-unit-tests:${IMAGE_TAG} --target unit-tests ."
-                            sh "docker run --name books-back-end-unit-tests-${IMAGE_TAG} books-back-end-unit-tests:${IMAGE_TAG}"
+                            sh "docker create --name books-back-end-unit-tests-${IMAGE_TAG} books-back-end-unit-tests:${IMAGE_TAG}"
                             sh "mkdir -p ${TEST_RESULTS_DIR}"
                             sh "docker cp books-back-end-unit-tests-${IMAGE_TAG}:/app/build/reports/tests/unit-tests ./${TEST_RESULTS_DIR}/unit-tests"
                             sh "cd ./${TEST_RESULTS_DIR}/unit-tests/ && zip -r ../unit-tests.zip ./*"
@@ -60,7 +60,7 @@ pipeline {
 
                         script {
                             sh "docker build -t books-back-end-pmd-tests:${IMAGE_TAG} --target pmd-tests ."
-                            sh "docker run --name books-back-end-pmd-tests-${IMAGE_TAG} books-back-end-pmd-tests:${IMAGE_TAG}"
+                            sh "docker create --name books-back-end-pmd-tests-${IMAGE_TAG} books-back-end-pmd-tests:${IMAGE_TAG}"
                             sh "mkdir -p ${TEST_RESULTS_DIR}"
                             sh "docker cp books-back-end-pmd-tests-${IMAGE_TAG}:/app/build/reports/pmd ./${TEST_RESULTS_DIR}/pmd-tests"
                             sh "cd ./${TEST_RESULTS_DIR}/pmd-tests/ && zip -r ../pmd-tests.zip ./*"
@@ -83,7 +83,7 @@ pipeline {
 
                         script {
                             sh "docker build -t books-back-end-spotbugs-tests:${IMAGE_TAG} --target spotbugs-tests ."
-                            sh "docker run --name books-back-end-spotbugs-tests-${IMAGE_TAG} books-back-end-spotbugs-tests:${IMAGE_TAG}"
+                            sh "docker create --name books-back-end-spotbugs-tests-${IMAGE_TAG} books-back-end-spotbugs-tests:${IMAGE_TAG}"
                             sh "mkdir -p ${TEST_RESULTS_DIR}"
                             sh "docker cp books-back-end-spotbugs-tests-${IMAGE_TAG}:/app/build/reports/spotbugs ./${TEST_RESULTS_DIR}/spotbugs-tests"
                             sh "cd ./${TEST_RESULTS_DIR}/spotbugs-tests/ && zip -r ../spotbugs-tests.zip ./*"
