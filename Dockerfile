@@ -27,6 +27,11 @@ FROM build AS unit-tests
 
 CMD ["./gradlew", "unit-test", "--no-daemon"]
 
+# SPOTBUGS TESTS
+FROM build AS spotbugs-tests
+
+CMD ["./gradlew", "spotbugsMain", "--no-daemon"]
+
 # RUNTIME STAGE
 FROM eclipse-temurin:17-jre-alpine AS runtime
 

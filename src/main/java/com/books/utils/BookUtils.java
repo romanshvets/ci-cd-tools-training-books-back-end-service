@@ -4,6 +4,7 @@ import com.books.model.BookDTO;
 import com.books.service.model.BookCreationRequest;
 import com.books.service.model.BookUpdateRequest;
 
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -51,7 +52,7 @@ public class BookUtils {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public static Set<BookDTO> generateRandomBooks(int count) {
-        var random = new Random();
+        var random = new SecureRandom();
 
         var result = new ConcurrentSkipListSet<>(Comparator.comparing(BookDTO::getId));
 

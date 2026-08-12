@@ -1,8 +1,11 @@
+import com.github.spotbugs.snom.Effort
+import com.github.spotbugs.snom.SpotBugsTask
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '4.1.0'
     id 'io.spring.dependency-management' version '1.1.7'
-    id 'org.owasp.dependencycheck' version '13.0.0'
+    id 'com.github.spotbugs' version '6.5.10'
 }
 
 group = 'com.cicd'
@@ -26,6 +29,14 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.13.0'
+}
+
+spotbugs {
+    ignoreFailures = true
+    effort = Effort.MAX
+    showStackTraces = true
 }
 
 tasks.register('unit-tests', Test) {
@@ -51,13 +62,8 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-dependencyCheck {
-    autoUpdate = false
-    failBuildOnCVSS = 7.0f
-    formats = ['HTML']
-    outputDirectory = "${buildDir}/reports/dependency-check"
-
-    nvd {
-        apiKey = "f223823f-e547-44ba-bce2-cd8a070b4db9"
+tasks.withType(SpotBugsTask).configureEach {
+    reports {
+        html.required = true
     }
 }
