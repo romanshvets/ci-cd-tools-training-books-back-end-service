@@ -93,6 +93,10 @@ pipeline {
 
 		stage('SonarQube Analysis') {
 		    steps {
+		        script {
+                    sh "chmod +x ./gradlew"
+                }
+
                 withSonarQubeEnv('sonarqube') {
                     sh './gradlew sonar'
                 }
