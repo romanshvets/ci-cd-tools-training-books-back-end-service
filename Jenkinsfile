@@ -27,9 +27,6 @@ pipeline {
 
 				script {
 					sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} --target runtime --build-arg BUILD_VERSION=${BUILD_VERSION} --build-arg BUILD_DATE=\"${BUILD_DATE}\" ."
-
-					sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${DOCKER_HUB_USER}/${IMAGE_NAME}:${IMAGE_TAG}"
-					sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${DOCKER_HUB_USER}/${IMAGE_NAME}:latest"
 				}
 
 				echo 'Built'
@@ -49,13 +46,35 @@ pipeline {
                             sh "cd ./${TEST_RESULTS_DIR}/unit-tests/ && zip -r ../unit-tests.zip ./*"
                         }
 
-                        echo 'Unit Tests Complete ...'
+                        echo 'Unit Tests Complete.'
                     }
 
                     post {
                         always {
                             sh "docker rm books-back-end-unit-tests-${IMAGE_TAG}"
                             sh "docker rmi -f books-back-end-unit-tests:${IMAGE_TAG}"
+                        }
+                    }
+                }
+
+                stage('PMD Tests') {
+                    steps {
+                        echo 'Running PMD Tests ...'
+
+                        script {
+                            sh "docker build -t books-back-end-pmd-tests:${IMAGE_TAG} --target pmd-tests ."
+                            sh "docker run --name books-back-end-pmd-tests-${IMAGE_TAG} books-back-end-pmd-tests:${IMAGE_TAG}"
+                            sh "docker cp books-back-end-pmd-tests-${IMAGE_TAG}:/app/build/reports/pmd ./${TEST_RESULTS_DIR}/pmd-tests"
+                            sh "cd ./${TEST_RESULTS_DIR}/pmd-tests/ && zip -r ../pmd-tests.zip ./*"
+                        }
+
+                        echo 'SpotBugs PMD Complete.'
+                    }
+
+                    post {
+                        always {
+                            sh "docker rm books-back-end-pmd-tests-${IMAGE_TAG}"
+                            sh "docker rmi -f books-back-end-pmd-tests:${IMAGE_TAG}"
                         }
                     }
                 }
@@ -96,6 +115,9 @@ pipeline {
 					)]) {
 
 					script {
+					    sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${DOCKER_HUB_USER}/${IMAGE_NAME}:${IMAGE_TAG}"
+                        sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${DOCKER_HUB_USER}/${IMAGE_NAME}:latest"
+
 						sh "echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin"
 
 						sh "docker push ${DOCKER_HUB_USER}/${IMAGE_NAME}:${IMAGE_TAG}"

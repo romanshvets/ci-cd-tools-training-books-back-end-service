@@ -1,8 +1,10 @@
 import com.github.spotbugs.snom.Effort
 import com.github.spotbugs.snom.SpotBugsTask
+import org.gradle.api.plugins.quality.Pmd
 
 plugins {
     id 'java'
+    id 'pmd'
     id 'org.springframework.boot' version '4.1.0'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'com.github.spotbugs' version '6.5.10'
@@ -31,6 +33,12 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.13.0'
+}
+
+pmd {
+    toolVersion = "7.3.0"
+
+    ignoreFailures = true
 }
 
 spotbugs {
@@ -65,5 +73,12 @@ tasks.named('test') {
 tasks.withType(SpotBugsTask).configureEach {
     reports {
         html.required = true
+    }
+}
+
+tasks.withType(Pmd).configureEach {
+    reports {
+        html.required = true
+        xml.required = false
     }
 }

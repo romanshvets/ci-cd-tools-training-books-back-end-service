@@ -27,6 +27,11 @@ FROM build AS unit-tests
 
 CMD ["./gradlew", "unit-test", "--no-daemon"]
 
+# PMD TESTS
+FROM build AS pmd-tests
+
+CMD ["./gradlew", "pmdMain", "--no-daemon"]
+
 # SPOTBUGS TESTS
 FROM build AS spotbugs-tests
 
