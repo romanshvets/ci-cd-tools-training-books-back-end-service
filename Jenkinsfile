@@ -46,15 +46,18 @@ pipeline {
                             sh "docker build -t books-back-end-unit-tests:${IMAGE_TAG} --target unit-tests ."
                             sh "docker run --name books-back-end-unit-tests-${IMAGE_TAG} books-back-end-unit-tests:${IMAGE_TAG}"
                             sh "docker cp books-back-end-unit-tests-${IMAGE_TAG}:/app/build/reports/tests ./${TEST_RESULTS_DIR}/"
+                            sh "zip -r unit-tests.zip ./${TEST_RESULTS_DIR}/unit-tests"
                         }
 
                         echo 'Unit tests complete ...'
                     }
 
-//                    post {
-//                        always {
-//                        }
-//                    }
+                    post {
+                        always {
+                            sh "docker rm books-back-end-unit-tests-${IMAGE_TAG}"
+                            sh "docker rmi -f books-back-end-unit-tests:${IMAGE_TAG}"
+                        }
+                    }
                 }
 
 
@@ -102,7 +105,7 @@ pipeline {
 		always {
 			sh 'docker logout'
 
-			archiveArtifacts artifacts: "${TEST_RESULTS_DIR}/**", allowEmptyArchive: true
+			archiveArtifacts artifacts: "${TEST_RESULTS_DIR}/**.zip", allowEmptyArchive: true
 		}
 	}
 }
