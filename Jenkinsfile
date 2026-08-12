@@ -92,15 +92,31 @@ pipeline {
 //		}
 
 		stage('SonarQube Analysis') {
-		    steps {
-		        script {
-                    sh "chmod +x ./gradlew"
-                }
+            steps {
+                echo 'Running SonarQube Tests ...'
 
                 withSonarQubeEnv('sonarqube') {
-                    sh './gradlew sonar'
+                    script {
+                        sh "docker build -t books-back-end-sonarqube-tests:${IMAGE_TAG} --target sonarqube-tests ."
+//                        sh "docker create --name books-back-end-spotbugs-tests-${IMAGE_TAG} books-back-end-spotbugs-tests:${IMAGE_TAG}"
+//                        sh "mkdir -p ${TEST_RESULTS_DIR}"
+//                        sh "docker cp books-back-end-spotbugs-tests-${IMAGE_TAG}:/app/build/reports/spotbugs ./${TEST_RESULTS_DIR}/spotbugs-tests"
+//                        sh "cd ./${TEST_RESULTS_DIR}/spotbugs-tests/ && zip -r ../spotbugs-tests.zip ./*"
+                    }
                 }
+
+                echo 'SonarQube Tests Complete'
             }
+
+//		    steps {
+//		        script {
+//                    sh "chmod +x ./gradlew"
+//                }
+//
+//                withSonarQubeEnv('sonarqube') {
+//                    sh './gradlew sonar'
+//                }
+//            }
         }
 
 		stage('Assemble') {
