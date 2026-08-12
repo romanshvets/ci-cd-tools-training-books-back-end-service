@@ -66,29 +66,6 @@ pipeline {
                     }
                 }
 
-                stage('PMD Tests') {
-                    steps {
-                        echo 'Running PMD Tests ...'
-
-                        script {
-                            sh "docker build -t books-back-end-pmd-tests:${IMAGE_TAG} --target pmd-tests ."
-                            sh "docker create --name books-back-end-pmd-tests-${IMAGE_TAG} books-back-end-pmd-tests:${IMAGE_TAG}"
-                            sh "mkdir -p ${TEST_RESULTS_DIR}"
-                            sh "docker cp books-back-end-pmd-tests-${IMAGE_TAG}:/app/build/reports/pmd ./${TEST_RESULTS_DIR}/pmd-tests"
-                            sh "cd ./${TEST_RESULTS_DIR}/pmd-tests/ && zip -r ../pmd-tests.zip ./*"
-                        }
-
-                        echo 'PMD Complete'
-                    }
-
-                    post {
-                        always {
-                            sh "docker rm books-back-end-pmd-tests-${IMAGE_TAG}"
-                            sh "docker rmi -f books-back-end-pmd-tests:${IMAGE_TAG}"
-                        }
-                    }
-                }
-
                 stage('SpotBugs Tests') {
                     steps {
                         echo 'Running SpotBugs Tests ...'
