@@ -46,7 +46,7 @@ pipeline {
                             sh "docker build -t books-back-end-unit-tests:${IMAGE_TAG} --target unit-tests ."
                             sh "docker run --name books-back-end-unit-tests-${IMAGE_TAG} books-back-end-unit-tests:${IMAGE_TAG}"
                             sh "docker cp books-back-end-unit-tests-${IMAGE_TAG}:/app/build/reports/tests/unit-tests ./${TEST_RESULTS_DIR}/unit-tests"
-                            sh "zip -r ./${TEST_RESULTS_DIR}/unit-tests.zip ./${TEST_RESULTS_DIR}/unit-tests/**"
+                            sh "cd ./${TEST_RESULTS_DIR}/unit-tests/ && zip -r ../unit-tests.zip ./*"
                         }
 
                         echo 'Unit tests complete ...'
