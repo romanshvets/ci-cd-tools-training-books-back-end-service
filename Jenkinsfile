@@ -15,7 +15,9 @@ pipeline {
 	stages {
 	    stage('Clean Up') {
             steps {
+                echo 'Cleaning Up ...'
                 cleanWs()
+                echo 'Cleaned Up'
             }
         }
 
@@ -24,18 +26,6 @@ pipeline {
 				echo 'Checking out ...'
 				checkout scm
 				echo 'Checked out'
-			}
-		}
-
-		stage('Build') {
-			steps {
-				echo 'Building ...'
-
-				script {
-					sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} --target runtime --build-arg BUILD_VERSION=${BUILD_VERSION} --build-arg BUILD_DATE=\"${BUILD_DATE}\" ."
-				}
-
-				echo 'Built'
 			}
 		}
 
@@ -53,7 +43,7 @@ pipeline {
                             sh "cd ./${TEST_RESULTS_DIR}/unit-tests/ && zip -r ../unit-tests.zip ./*"
                         }
 
-                        echo 'Unit Tests Complete.'
+                        echo 'Unit Tests Complete'
                     }
 
                     post {
@@ -76,7 +66,7 @@ pipeline {
                             sh "cd ./${TEST_RESULTS_DIR}/pmd-tests/ && zip -r ../pmd-tests.zip ./*"
                         }
 
-                        echo 'SpotBugs PMD Complete.'
+                        echo 'PMD Complete'
                     }
 
                     post {
@@ -99,7 +89,7 @@ pipeline {
                             sh "cd ./${TEST_RESULTS_DIR}/spotbugs-tests/ && zip -r ../spotbugs-tests.zip ./*"
                         }
 
-                        echo 'SpotBugs Tests Complete.'
+                        echo 'SpotBugs Tests Complete'
                     }
 
                     post {
@@ -111,6 +101,18 @@ pipeline {
                 }
             }
 		}
+
+		stage('Build') {
+            steps {
+                echo 'Building ...'
+
+                script {
+                    sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} --target runtime --build-arg BUILD_VERSION=${BUILD_VERSION} --build-arg BUILD_DATE=\"${BUILD_DATE}\" ."
+                }
+
+                echo 'Built'
+            }
+        }
 
 		stage('Deploy') {
 			steps {
@@ -140,6 +142,10 @@ pipeline {
 	}
 
 	post {
+        success {
+            cleanWs()
+        }
+
 		always {
 			sh 'docker logout'
 

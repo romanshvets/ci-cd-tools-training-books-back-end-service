@@ -1,6 +1,5 @@
 import com.github.spotbugs.snom.Effort
 import com.github.spotbugs.snom.SpotBugsTask
-import org.gradle.api.plugins.quality.Pmd
 
 plugins {
     id 'java'
@@ -37,7 +36,6 @@ dependencies {
 
 pmd {
     toolVersion = "7.3.0"
-
     ignoreFailures = true
 }
 
@@ -57,14 +55,6 @@ tasks.register('unit-tests', Test) {
         includeTestsMatching "*UnitTest"
     }
 }
-
-//tasks.register('integration-tests', Test) {
-//    useJUnitPlatform()
-//
-//    filter {
-//        includeTestsMatching "*UnitTest"
-//    }
-//}
 
 tasks.named('test') {
     useJUnitPlatform()

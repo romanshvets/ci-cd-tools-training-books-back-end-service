@@ -1,8 +1,8 @@
 # USE THE FOLLOWING COMMAND TO CHANGE THE DEFAULT SERVER PORT (WHICH IS 8080) :
 # docker run -e BOOKS_BACK_SERVER_PORT=9090 -p 8080:9090 books-back-service
 
-# BUILD STAGE
-FROM gradle:jdk17-alpine AS build
+# BASE STAGE
+FROM gradle:jdk17-alpine AS base
 
 WORKDIR /app
 
@@ -15,27 +15,32 @@ RUN ["./gradlew", "dependencies", "--no-daemon"]
 
 COPY src ./src
 
+# UNIT TESTS
+FROM base AS unit-tests
+
+CMD ["./gradlew", "clean", "unit-test", "--no-daemon"]
+
+# PMD TESTS
+FROM base AS pmd-tests
+
+CMD ["./gradlew", "pmdMain", "--no-daemon"]
+
+# SPOTBUGS TESTS
+FROM base AS spotbugs-tests
+
+CMD ["./gradlew", "spotbugsMain", "--no-daemon"]
+
+# BUILD STAGE
+FROM base AS build
+
+WORKDIR /app
+
 ARG BUILD_VERSION=0
 ARG BUILD_DATE=0
 
 RUN sed -i "s/%VERSION_PLACEHOLDER%/${BUILD_VERSION}/g" ./src/main/resources/meta.properties
 RUN sed -i "s/%BUILD_DATE_PLACEHOLDER%/${BUILD_DATE}/g" ./src/main/resources/meta.properties
-RUN ["./gradlew", "build", "-x", "test", "--no-daemon"]
-
-# UNIT TESTS
-FROM build AS unit-tests
-
-CMD ["./gradlew", "unit-test", "--no-daemon"]
-
-# PMD TESTS
-FROM build AS pmd-tests
-
-CMD ["./gradlew", "pmdMain", "--no-daemon"]
-
-# SPOTBUGS TESTS
-FROM build AS spotbugs-tests
-
-CMD ["./gradlew", "spotbugsMain", "--no-daemon"]
+RUN ["./gradlew", "build", "-x", "test", "-x", "check", "--no-daemon"]
 
 # RUNTIME STAGE
 FROM eclipse-temurin:17-jre-alpine AS runtime
