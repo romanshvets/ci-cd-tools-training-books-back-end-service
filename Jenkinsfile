@@ -102,7 +102,7 @@ pipeline {
 		always {
 			sh 'docker logout'
 
-			archiveArtifacts artifacts: "${TEST_RESULTS_DIR}", allowEmptyArchive: 'true'
+			archiveArtifacts artifacts: "./${TEST_RESULTS_DIR}", allowEmptyArchive: 'true'
 		}
 	}
 }
