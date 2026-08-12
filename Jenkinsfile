@@ -29,17 +29,17 @@ pipeline {
 			}
 		}
 
-//		stage('Build') {
-//            steps {
-//                echo 'Building ...'
-//
-//                script {
-//                    sh "docker build -t ${IMAGE_NAME}-base:${IMAGE_TAG} --target base ."
-//                }
-//
-//                echo 'Built'
-//            }
-//        }
+		stage('Build') {
+            steps {
+                echo 'Building ...'
+
+                script {
+                    sh "docker build -t ${IMAGE_NAME}-base:${IMAGE_TAG} --target base ."
+                }
+
+                echo 'Built'
+            }
+        }
 
 //		stage('Test') {
 //		    parallel {
