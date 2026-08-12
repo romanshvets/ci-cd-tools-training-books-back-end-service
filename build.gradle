@@ -44,6 +44,7 @@ sonar {
     properties {
         property "sonar.projectKey", "books-back-service"
         property "sonar.projectName", "books-back-service"
+        property "sonar.host.url", "http://host.docker.internal:9000/"
     }
 }
 
