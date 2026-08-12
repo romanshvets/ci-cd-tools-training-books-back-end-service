@@ -91,6 +91,12 @@ pipeline {
             }
 		}
 
+		stage('SonarQube Analysis') {
+            withSonarQubeEnv() {
+                sh './gradlew sonar'
+            }
+        }
+
 		stage('Assemble') {
             steps {
                 echo 'Assembling ...'
