@@ -13,6 +13,12 @@ pipeline {
 	}
 
 	stages {
+	    stage('Clean Up') {
+            steps {
+                cleanWs()
+            }
+        }
+
 		stage('Checkout') {
 			steps {
 				echo 'Checking out ...'
@@ -93,7 +99,7 @@ pipeline {
                             sh "cd ./${TEST_RESULTS_DIR}/spotbugs-tests/ && zip -r ../spotbugs-tests.zip ./*"
                         }
 
-                        echo 'SpotBugs Tests Complete ...'
+                        echo 'SpotBugs Tests Complete.'
                     }
 
                     post {
