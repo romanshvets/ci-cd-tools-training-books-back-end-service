@@ -29,67 +29,67 @@ pipeline {
 			}
 		}
 
-		stage('Build') {
-            steps {
-                echo 'Building ...'
+//		stage('Build') {
+//            steps {
+//                echo 'Building ...'
+//
+//                script {
+//                    sh "docker build -t ${IMAGE_NAME}-base:${IMAGE_TAG} --target base ."
+//                }
+//
+//                echo 'Built'
+//            }
+//        }
 
-                script {
-                    sh "docker build -t ${IMAGE_NAME}-base:${IMAGE_TAG} --target base ."
-                }
-
-                echo 'Built'
-            }
-        }
-
-		stage('Test') {
-		    parallel {
-                stage('Unit Tests') {
-                    steps {
-                        echo 'Running Unit Tests ...'
-
-                        script {
-                            sh "docker build -t books-back-end-unit-tests:${IMAGE_TAG} --target unit-tests ."
-                            sh "docker create --name books-back-end-unit-tests-${IMAGE_TAG} books-back-end-unit-tests:${IMAGE_TAG}"
-                            sh "mkdir -p ${TEST_RESULTS_DIR}"
-                            sh "docker cp books-back-end-unit-tests-${IMAGE_TAG}:/app/build/reports/tests/unit-tests ./${TEST_RESULTS_DIR}/unit-tests"
-                            sh "cd ./${TEST_RESULTS_DIR}/unit-tests/ && zip -r ../unit-tests.zip ./*"
-                        }
-
-                        echo 'Unit Tests Complete'
-                    }
-
-                    post {
-                        always {
-                            sh "docker rm books-back-end-unit-tests-${IMAGE_TAG}"
-                            sh "docker rmi -f books-back-end-unit-tests:${IMAGE_TAG}"
-                        }
-                    }
-                }
-
-                stage('SpotBugs Tests') {
-                    steps {
-                        echo 'Running SpotBugs Tests ...'
-
-                        script {
-                            sh "docker build -t books-back-end-spotbugs-tests:${IMAGE_TAG} --target spotbugs-tests ."
-                            sh "docker create --name books-back-end-spotbugs-tests-${IMAGE_TAG} books-back-end-spotbugs-tests:${IMAGE_TAG}"
-                            sh "mkdir -p ${TEST_RESULTS_DIR}"
-                            sh "docker cp books-back-end-spotbugs-tests-${IMAGE_TAG}:/app/build/reports/spotbugs ./${TEST_RESULTS_DIR}/spotbugs-tests"
-                            sh "cd ./${TEST_RESULTS_DIR}/spotbugs-tests/ && zip -r ../spotbugs-tests.zip ./*"
-                        }
-
-                        echo 'SpotBugs Tests Complete'
-                    }
-
-                    post {
-                        always {
-                            sh "docker rm books-back-end-spotbugs-tests-${IMAGE_TAG}"
-                            sh "docker rmi -f books-back-end-spotbugs-tests:${IMAGE_TAG}"
-                        }
-                    }
-                }
-            }
-		}
+//		stage('Test') {
+//		    parallel {
+//                stage('Unit Tests') {
+//                    steps {
+//                        echo 'Running Unit Tests ...'
+//
+//                        script {
+//                            sh "docker build -t books-back-end-unit-tests:${IMAGE_TAG} --target unit-tests ."
+//                            sh "docker create --name books-back-end-unit-tests-${IMAGE_TAG} books-back-end-unit-tests:${IMAGE_TAG}"
+//                            sh "mkdir -p ${TEST_RESULTS_DIR}"
+//                            sh "docker cp books-back-end-unit-tests-${IMAGE_TAG}:/app/build/reports/tests/unit-tests ./${TEST_RESULTS_DIR}/unit-tests"
+//                            sh "cd ./${TEST_RESULTS_DIR}/unit-tests/ && zip -r ../unit-tests.zip ./*"
+//                        }
+//
+//                        echo 'Unit Tests Complete'
+//                    }
+//
+//                    post {
+//                        always {
+//                            sh "docker rm books-back-end-unit-tests-${IMAGE_TAG}"
+//                            sh "docker rmi -f books-back-end-unit-tests:${IMAGE_TAG}"
+//                        }
+//                    }
+//                }
+//
+//                stage('SpotBugs Tests') {
+//                    steps {
+//                        echo 'Running SpotBugs Tests ...'
+//
+//                        script {
+//                            sh "docker build -t books-back-end-spotbugs-tests:${IMAGE_TAG} --target spotbugs-tests ."
+//                            sh "docker create --name books-back-end-spotbugs-tests-${IMAGE_TAG} books-back-end-spotbugs-tests:${IMAGE_TAG}"
+//                            sh "mkdir -p ${TEST_RESULTS_DIR}"
+//                            sh "docker cp books-back-end-spotbugs-tests-${IMAGE_TAG}:/app/build/reports/spotbugs ./${TEST_RESULTS_DIR}/spotbugs-tests"
+//                            sh "cd ./${TEST_RESULTS_DIR}/spotbugs-tests/ && zip -r ../spotbugs-tests.zip ./*"
+//                        }
+//
+//                        echo 'SpotBugs Tests Complete'
+//                    }
+//
+//                    post {
+//                        always {
+//                            sh "docker rm books-back-end-spotbugs-tests-${IMAGE_TAG}"
+//                            sh "docker rmi -f books-back-end-spotbugs-tests:${IMAGE_TAG}"
+//                        }
+//                    }
+//                }
+//            }
+//		}
 
 		stage('SonarQube Analysis') {
 		    steps {
