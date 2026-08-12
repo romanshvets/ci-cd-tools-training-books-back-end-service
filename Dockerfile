@@ -22,10 +22,10 @@ FROM base AS unit-tests
 
 RUN ["./gradlew", "unit-test", "--no-daemon"]
 
-# PMD TESTS
-FROM base AS pmd-tests
+# SONARQUBE TESTS
+FROM base AS sonarqube-tests
 
-RUN ["./gradlew", "pmdMain", "--no-daemon"]
+RUN ["./gradlew", "sonar", "--no-daemon"]
 
 # SPOTBUGS TESTS
 FROM base AS spotbugs-tests
