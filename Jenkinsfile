@@ -4,11 +4,12 @@ pipeline {
 	}
 
     environment {
-		DOCKER_HUB_USER = 'rshvets89'
-		IMAGE_NAME      = 'books-back-service'
-		IMAGE_TAG       = "${env.BUILD_NUMBER}"
-		BUILD_VERSION   = "${env.BUILD_NUMBER}"
-		BUILD_DATE      = "${new Date().format('yyyy-MM-dd HH:mm:ss')}"
+		DOCKER_HUB_USER     = 'rshvets89'
+		IMAGE_NAME          = 'books-back-service'
+		IMAGE_TAG           = "${env.BUILD_NUMBER}"
+		BUILD_VERSION       = "${env.BUILD_NUMBER}"
+		BUILD_DATE          = "${new Date().format('yyyy-MM-dd HH:mm:ss')}"
+		TEST_RESULTS_DIR    = 'test-results'
 	}
 
 	stages {
@@ -43,6 +44,7 @@ pipeline {
 
                         script {
                             sh "docker build -t books-back-end-unit-tests:${IMAGE_TAG} --target unit-tests ."
+                            sh "docker run --name books-back-end-unit-tests-${IMAGE_TAG} books-back-end-unit-tests:${IMAGE_TAG}"
 
 // docker build --target unit-tests -t books-back-end-unit-tests:1 .
 // docker run --name books-back-end-unit-tests-1 books-back-end-unit-tests:1
@@ -58,6 +60,8 @@ pipeline {
 //                        }
 //                    }
                 }
+
+
 //                stage('Test On Linux') {
 //                    agent {
 //                        label "linux"
