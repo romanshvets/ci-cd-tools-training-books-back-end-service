@@ -34,7 +34,7 @@ pipeline {
                 echo 'Building ...'
 
                 script {
-                    sh "docker build -t ${IMAGE_NAME}-BASE:${IMAGE_TAG} --target base ."
+                    sh "docker build -t ${IMAGE_NAME}-base:${IMAGE_TAG} --target base ."
                 }
 
                 echo 'Built'
@@ -159,7 +159,7 @@ pipeline {
         }
 
 		always {
-            sh "docker rmi -f ${IMAGE_NAME}-BASE:${IMAGE_TAG}"
+            sh "docker rmi -f ${IMAGE_NAME}-base:${IMAGE_TAG}"
 
 			sh 'docker logout'
 
