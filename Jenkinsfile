@@ -116,6 +116,12 @@ pipeline {
 
                         echo 'SonarQube Tests Complete'
                     }
+
+                    post {
+                        always {
+                            sh "docker rmi -f books-back-end-sonarqube-tests:${IMAGE_TAG}"
+                        }
+                    }
                 }
             }
 		}
