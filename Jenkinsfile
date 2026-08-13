@@ -10,6 +10,10 @@ pipeline {
 		BUILD_VERSION       = "${env.BUILD_NUMBER}"
 		BUILD_DATE          = "${new Date().format('yyyy-MM-dd HH:mm:ss')}"
 		TEST_RESULTS_DIR    = 'test-results'
+		SONAR_HOST          = 'http://82.144.223.31:9000'
+        SONAR_TOKEN         = 'sqp_3c78f882924fdeeaa048755e6a1fe9834855915c'
+        SONAR_PROJECT_KEY   = 'books-back-service'
+        SONAR_PROJECT_NAME  = 'books-back-service'
 	}
 
 	stages {
@@ -97,7 +101,11 @@ pipeline {
 
                 withSonarQubeEnv('sonarqube') {
                     script {
-                        sh "docker build -t books-back-end-sonarqube-tests:${IMAGE_TAG} --target sonarqube-tests ."
+                        sh "docker build -t books-back-end-sonarqube-tests:${IMAGE_TAG} --target sonarqube-tests
+                            --build-arg SONAR_HOST=${SONAR_HOST}
+                            --build-arg SONAR_TOKEN=${SONAR_TOKEN}
+                            --build-arg SONAR_PROJECT_KEY=${SONAR_PROJECT_KEY}
+                            --build-arg SONAR_PROJECT_NAME=${SONAR_PROJECT_NAME} ."
 //                        sh "docker create --name books-back-end-spotbugs-tests-${IMAGE_TAG} books-back-end-spotbugs-tests:${IMAGE_TAG}"
 //                        sh "mkdir -p ${TEST_RESULTS_DIR}"
 //                        sh "docker cp books-back-end-spotbugs-tests-${IMAGE_TAG}:/app/build/reports/spotbugs ./${TEST_RESULTS_DIR}/spotbugs-tests"

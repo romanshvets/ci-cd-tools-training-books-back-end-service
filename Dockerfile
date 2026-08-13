@@ -25,7 +25,16 @@ RUN ["./gradlew", "unit-test", "--no-daemon"]
 # SONARQUBE TESTS
 FROM base AS sonarqube-tests
 
-RUN ["./gradlew", "sonar", "--no-daemon"]
+ARG SONAR_HOST
+ARG SONAR_TOKEN
+ARG SONAR_PROJECT_KEY
+ARG SONAR_PROJECT_NAME
+
+RUN ./gradlew sonar --no-daemon \
+    -Dsonar.host.url=${SONAR_HOST} \
+    -Dsonar.token=${SONAR_TOKEN} \
+    -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+    -Dsonar.projectName=${SONAR_PROJECT_NAME}
 
 # SPOTBUGS TESTS
 FROM base AS spotbugs-tests
