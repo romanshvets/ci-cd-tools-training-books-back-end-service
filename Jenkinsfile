@@ -99,7 +99,7 @@ pipeline {
             steps {
                 echo 'Running SonarQube Tests ...'
 
-                withSonarQubeEnv('sonarqube') {
+//                withSonarQubeEnv('sonarqube') {
                     script {
                         sh "docker build -t books-back-end-sonarqube-tests:${IMAGE_TAG} --target sonarqube-tests --build-arg SONAR_HOST=${SONAR_HOST} --build-arg SONAR_TOKEN=${SONAR_TOKEN} --build-arg SONAR_PROJECT_KEY=${SONAR_PROJECT_KEY} --build-arg SONAR_PROJECT_NAME=${SONAR_PROJECT_NAME} ."
 //                        sh "docker create --name books-back-end-spotbugs-tests-${IMAGE_TAG} books-back-end-spotbugs-tests:${IMAGE_TAG}"
@@ -110,7 +110,7 @@ pipeline {
 //                        sh "docker cp books-back-end-spotbugs-tests-${IMAGE_TAG}:/app/build/reports/spotbugs ./${TEST_RESULTS_DIR}/spotbugs-tests"
                         sh "cd ./${TEST_RESULTS_DIR}/sonarqube-tests/ && zip -r ../sonarqube-tests.zip ./*"
                     }
-                }
+//                }
 
                 echo 'SonarQube Tests Complete'
             }
