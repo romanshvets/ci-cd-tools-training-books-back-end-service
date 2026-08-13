@@ -99,18 +99,14 @@ pipeline {
             steps {
                 echo 'Running SonarQube Tests ...'
 
-//                withSonarQubeEnv('sonarqube') {
-                    script {
-                        sh "docker build -t books-back-end-sonarqube-tests:${IMAGE_TAG} --target sonarqube-tests --build-arg SONAR_HOST=${SONAR_HOST} --build-arg SONAR_TOKEN=${SONAR_TOKEN} --build-arg SONAR_PROJECT_KEY=${SONAR_PROJECT_KEY} --build-arg SONAR_PROJECT_NAME=${SONAR_PROJECT_NAME} ."
-//                        sh "docker create --name books-back-end-spotbugs-tests-${IMAGE_TAG} books-back-end-spotbugs-tests:${IMAGE_TAG}"
-                        sh "mkdir -p ${TEST_RESULTS_DIR}"
-                        sh "mkdir -p ${TEST_RESULTS_DIR}/sonarqube-tests"
-                        sh 'curl -H \"Authorization: Bearer ${SONAR_TOKEN}\" \"${SONAR_HOST}/api/qualitygates/project_status?projectKey=${SONAR_PROJECT_KEY}\" > ${TEST_RESULTS_DIR}/sonarqube-tests/sq-quality-gate-status.json'
-                        sh 'curl -H \"Authorization: Bearer ${SONAR_TOKEN}\" \"${SONAR_HOST}/api/measures/component?component=${SONAR_PROJECT_KEY}&metricKeys=bugs,vulnerabilities,code_smells,coverage,reliability_rating\" > ${TEST_RESULTS_DIR}/sonarqube-tests/sq-metrics.json'
-//                        sh "docker cp books-back-end-spotbugs-tests-${IMAGE_TAG}:/app/build/reports/spotbugs ./${TEST_RESULTS_DIR}/spotbugs-tests"
-                        sh "cd ./${TEST_RESULTS_DIR}/sonarqube-tests/ && zip -r ../sonarqube-tests.zip ./*"
-                    }
-//                }
+                script {
+                    sh 'docker build -t books-back-end-sonarqube-tests:${IMAGE_TAG} --target sonarqube-tests --build-arg SONAR_HOST=${SONAR_HOST} --build-arg SONAR_TOKEN=${SONAR_TOKEN} --build-arg SONAR_PROJECT_KEY=${SONAR_PROJECT_KEY} --build-arg SONAR_PROJECT_NAME=${SONAR_PROJECT_NAME} .'
+                    sh 'mkdir -p ${TEST_RESULTS_DIR}'
+                    sh 'mkdir -p ${TEST_RESULTS_DIR}/sonarqube-tests'
+                    sh 'curl -H \"Authorization: Bearer ${SONAR_TOKEN}\" \"${SONAR_HOST}/api/qualitygates/project_status?projectKey=${SONAR_PROJECT_KEY}\" > ${TEST_RESULTS_DIR}/sonarqube-tests/sq-quality-gate-status.json'
+                    sh 'curl -H \"Authorization: Bearer ${SONAR_TOKEN}\" \"${SONAR_HOST}/api/measures/component?component=${SONAR_PROJECT_KEY}&metricKeys=bugs,vulnerabilities,code_smells,coverage,reliability_rating\" > ${TEST_RESULTS_DIR}/sonarqube-tests/sq-metrics.json'
+                    sh 'cd ./${TEST_RESULTS_DIR}/sonarqube-tests/ && zip -r ../sonarqube-tests.zip ./*'
+                }
 
                 echo 'SonarQube Tests Complete'
             }
