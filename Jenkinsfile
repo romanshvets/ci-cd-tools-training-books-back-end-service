@@ -101,11 +101,11 @@ pipeline {
 
                 script {
                     sh '''
-                        docker build -t books-back-end-sonarqube-tests:${IMAGE_TAG}
-                        --target sonarqube-tests
-                        --build-arg SONAR_HOST=${SONAR_HOST}
-                        --build-arg SONAR_TOKEN=${SONAR_TOKEN}
-                        --build-arg SONAR_PROJECT_KEY=${SONAR_PROJECT_KEY}
+                        docker build -t books-back-end-sonarqube-tests:${IMAGE_TAG} \
+                        --target sonarqube-tests \
+                        --build-arg SONAR_HOST=${SONAR_HOST} \
+                        --build-arg SONAR_TOKEN=${SONAR_TOKEN} \
+                        --build-arg SONAR_PROJECT_KEY=${SONAR_PROJECT_KEY} \
                         --build-arg SONAR_PROJECT_NAME=${SONAR_PROJECT_NAME} .
                     '''
 
