@@ -100,7 +100,16 @@ pipeline {
                 echo 'Running SonarQube Tests ...'
 
                 script {
-                    sh 'docker build -t books-back-end-sonarqube-tests:${IMAGE_TAG} --target sonarqube-tests --build-arg SONAR_HOST=${SONAR_HOST} --build-arg SONAR_TOKEN=${SONAR_TOKEN} --build-arg SONAR_PROJECT_KEY=${SONAR_PROJECT_KEY} --build-arg SONAR_PROJECT_NAME=${SONAR_PROJECT_NAME} .'
+                    sh '''
+                        docker build -t books-back-end-sonarqube-tests:${IMAGE_TAG}
+                        --target sonarqube-tests
+                        --build-arg SONAR_HOST=${SONAR_HOST}
+                        --build-arg SONAR_TOKEN=${SONAR_TOKEN}
+                        --build-arg SONAR_PROJECT_KEY=${SONAR_PROJECT_KEY}
+                        --build-arg SONAR_PROJECT_NAME=${SONAR_PROJECT_NAME}
+                        .
+                    '''
+
                     sh 'mkdir -p ${TEST_RESULTS_DIR}'
                     sh 'mkdir -p ${TEST_RESULTS_DIR}/sonarqube-tests'
                     sh 'curl -H \"Authorization: Bearer ${SONAR_TOKEN}\" \"${SONAR_HOST}/api/qualitygates/project_status?projectKey=${SONAR_PROJECT_KEY}\" > ${TEST_RESULTS_DIR}/sonarqube-tests/sq-quality-gate-status.json'
