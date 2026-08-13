@@ -106,7 +106,7 @@ pipeline {
                         sh "mkdir -p ${TEST_RESULTS_DIR}"
                         sh "mkdir -p ${TEST_RESULTS_DIR}/sonarqube-tests"
                         sh "curl -H \"Authorization: Bearer ${SONAR_TOKEN}\" \"${SONAR_HOST}/api/qualitygates/project_status?projectKey=${SONAR_PROJECT_KEY}\" > ${TEST_RESULTS_DIR}/sonarqube-tests/sq-quality-gate-status.json"
-                        sh "curl -H \"Authorization: Bearer ${SONAR_TOKEN}\" \"${SONAR_HOST}api/measures/component?component=${SONAR_PROJECT_KEY}&metricKeys=bugs,vulnerabilities,code_smells,coverage,reliability_rating\" > ${TEST_RESULTS_DIR}/sonarqube-tests/sq-metrics.json"
+                        sh "curl -H \"Authorization: Bearer ${SONAR_TOKEN}\" \"${SONAR_HOST}/api/measures/component?component=${SONAR_PROJECT_KEY}&metricKeys=bugs,vulnerabilities,code_smells,coverage,reliability_rating\" > ${TEST_RESULTS_DIR}/sonarqube-tests/sq-metrics.json"
 //                        sh "docker cp books-back-end-spotbugs-tests-${IMAGE_TAG}:/app/build/reports/spotbugs ./${TEST_RESULTS_DIR}/spotbugs-tests"
                         sh "cd ./${TEST_RESULTS_DIR}/sonarqube-tests/ && zip -r ../sonarqube-tests.zip ./*"
                     }
