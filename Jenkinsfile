@@ -126,8 +126,6 @@ pipeline {
             }
 		}
 
-
-
 		stage('Assemble') {
             steps {
                 echo 'Assembling ...'
