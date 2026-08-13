@@ -10,10 +10,10 @@ pipeline {
 		BUILD_VERSION       = "${env.BUILD_NUMBER}"
 		BUILD_DATE          = "${new Date().format('yyyy-MM-dd HH:mm:ss')}"
 		TEST_RESULTS_DIR    = 'test-results'
-		SONAR_HOST          = 'http://82.144.223.31:9000'
-        SONAR_TOKEN         = 'sqp_3c78f882924fdeeaa048755e6a1fe9834855915c'
-        SONAR_PROJECT_KEY   = 'books-back-service'
-        SONAR_PROJECT_NAME  = 'books-back-service'
+		SONAR_HOST          = credentials('sonarqube-host')
+        SONAR_TOKEN         = credentials('sonarqube-token')
+        SONAR_PROJECT_KEY   = credentials('sonarqube-project-key')
+        SONAR_PROJECT_NAME  = credentials('sonarqube-project-name')
 	}
 
 	stages {
@@ -111,16 +111,6 @@ pipeline {
 
                 echo 'SonarQube Tests Complete'
             }
-
-//		    steps {
-//		        script {
-//                    sh "chmod +x ./gradlew"
-//                }
-//
-//                withSonarQubeEnv('sonarqube') {
-//                    sh './gradlew sonar'
-//                }
-//            }
         }
 
 		stage('Assemble') {
